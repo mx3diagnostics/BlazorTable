@@ -1,9 +1,16 @@
-﻿@namespace BlazorTable
+@namespace BlazorTable
 @typeparam TableItem
+@inject NavigationManager NavigationManager
+
+<CascadingValue Value="(ITable<TableItem>)this" Name="Table">
+    @ChildContent
+</CascadingValue>
 
 @if (Columns.Any())
 {
-    <table class="@TableClass" @attributes="UnknownParameters">
+<table class="@TableClass" @attributes="UnknownParameters">
+    @if (TempItems != null)
+    {
         <thead class="@TableHeadClass">
             <tr style="cursor: pointer;">
                 @foreach (IColumn<TableItem> column in Columns)
@@ -29,9 +36,9 @@
 
                             @if (column.Filterable)
                             {
-                                <div class="float-right" @onclick="@((x) => column.ToggleFilter())" @onclick:stopPropagation>
+                                <span @onclick="@((x) => column.ToggleFilter())" @onclick:stopPropagation>
                                     <a href="javascript:;" @ref="column.FilterRef" style="text-decoration: none"><span style="@(column.Filter == null ? "opacity: 0.2;" : string.Empty)">&#128269;</span></a>
-                                </div>
+                                </span>
                             }
                         </div>
                     </th>
@@ -39,67 +46,73 @@
             </tr>
         </thead>
         <tbody class="@TableBodyClass">
-            @if (TempItems != null)
+            @if (TempItems.Any())
             {
-                if (TempItems.Any())
+                @foreach (TableItem item in TempItems)
                 {
-                    foreach (TableItem item in TempItems)
-                    {
-                        <tr @key="item" class="@RowClass(item)">
-                            @foreach (IColumn<TableItem> column in Columns)
-                            {
-                                <td @key="column" style="@(column.Align == Align.Left ? "text-align: left;" : column.Align == Align.Center ? "text-align: center;" : column.Align == Align.Right ? "text-align: right;" : string.Empty)"
-                                    class="@(column.Class)">
-                                    @if (IsEditMode && column.EditTemplate != null)
+                    <tr @key="item" class="@RowClass(item)" @onclick="() => ABC(item)">
+                        @foreach (IColumn<TableItem> column in Columns)
+                        {
+                            <td @key="column" style="@(column.Align == Align.Left ? "text-align: left;" : column.Align == Align.Center ? "text-align: center;" : column.Align == Align.Right ? "text-align: right;" : string.Empty)"
+                                class="@(column.Class)">
+                                @if (IsEditMode && column.EditTemplate != null)
+                                {
+                                    @column.EditTemplate(item)
+                                }
+                                else
+                                {
+                                    if (column.Template == null)
                                     {
-                                        @column.EditTemplate(item)
+                                        @column.Render(item);
                                     }
                                     else
                                     {
-                                        if (column.Template == null)
-                                        {
-                                            @column.Render(item);
-                                        }
-                                        else
-                                        {
-                                            @column.Template(item);
-                                        }
+                                        @column.Template(item);
                                     }
-                                </td>
-                            }
-                        </tr>
-                    }
-                }
-                else if (_emptyDataTemplate != null)
-                {
-                    <tr>
-                        <td colspan="@Columns.Count">
-                            @_emptyDataTemplate
-                        </td>
+                                }
+                            </td>
+                        }
                     </tr>
                 }
             }
-            else
+            else if (_emptyDataTemplate != null)
             {
                 <tr>
                     <td colspan="@Columns.Count">
-                        @if (_loadingDataTemplate != null)
-                        {
-                            @_loadingDataTemplate
-                        }
-                        else
-                        {
-                            <div class="text-center">
-                                Loading...
-                            </div>
-                        }
+                        @_emptyDataTemplate
                     </td>
                 </tr>
             }
         </tbody>
-    </table>
+    }
+    else
+    {
+        <thead class="@TableHeadClass">
+            <tr style="cursor: pointer;">
+                <th></th>
+            </tr>
+        </thead>
+        <tr>
+            <td colspan="@Columns.Count">
+                @if (_loadingDataTemplate != null)
+                {
+                    @_loadingDataTemplate
+                }
+                else
+                {
+                    <div class="text-center">
+                        Loading...
+                    </div>
+                }
+            </td>
+        </tr>
+    }
+</table>
 }
 
-<CascadingValue Value="(ITable<TableItem>)this" Name="Table">
-    @ChildContent
-</CascadingValue>
+@code {
+    private void ABC(TableItem item)
+    {
+        NavigationManager.NavigateTo("item");
+    }
+}

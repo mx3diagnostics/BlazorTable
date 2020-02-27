@@ -2,31 +2,30 @@
 
 @if (AlwaysShow || (Table.TotalPages >= 1))
 {
-    <div class="d-flex justify-content-end">
+    <div class="table-pager">
+        <span>@Table.TotalCount total records</span>
         <ul class="pagination">
-            @if (ShowPageNumber)
-            {
-                <li class="page-item disabled" @onclick="@(() => Table.FirstPage())" title="Page @(Table.PageNumber + 1)/@(Table.TotalPages)">
-                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">@(Table.PageNumber + 1)/@(Table.TotalPages)</a>
-                </li>
-            }
-            @if (ShowTotalCount)
-            {
-                <li class="page-item disabled" @onclick="@(() => Table.FirstPage())" title="Total Items @Table.TotalCount">
-                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">@Table.TotalCount</a>
-                </li>
-            }
-            @if ((ShowPageNumber || ShowTotalCount))
-            {
-                <li class="page-item disabled">
-                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">&nbsp;</a>
-                </li>
-            }
+            <li class="page-item @(Table.PageNumber == 0 ? "disabled": "")" @onclick="@(() => Table.FirstPage())" title="First"><i class="fas fa-angle-double-left"></i></li>
+            <li class="page-item @(Table.PageNumber == 0 ? "disabled": "")" @onclick="@(() => Table.PreviousPage())" title="Previous"><i class="fas fa-angle-left"></i></li>
 
-            <li class="page-item @(Table.PageNumber == 0 ? "disabled": "")" @onclick="@(() => Table.FirstPage())" title="First"><a class="page-link" href="javascript:;">First</a></li>
-            <li class="page-item @(Table.PageNumber == 0 ? "disabled": "")" @onclick="@(() => Table.PreviousPage())" title="Previous"><a class="page-link" href="javascript:;">Previous</a></li>
-            <li class="page-item @(Table.PageNumber + 1 < Table.TotalPages ? "" : "disabled")" @onclick="@(() => Table.NextPage())" title="Next"><a class="page-link" href="javascript:;">Next</a></li>
-            <li class="page-item @(Table.PageNumber + 1 != Table.TotalPages ? "" : "disabled")" @onclick="@(() => Table.LastPage())" title="Last"><a class="page-link" href="javascript:;">Last</a></li>
+            <li class="page-item pages"><input @bind="PageNumber" /> of @(Table.TotalPages)</li>
+
+            <li class="page-item @(Table.PageNumber + 1 < Table.TotalPages ? "" : "disabled")" @onclick="@(() => Table.NextPage())" title="Next"><i class="fas fa-angle-right"></i></li>
+            <li class="page-item @(Table.PageNumber + 1 != Table.TotalPages ? "" : "disabled")" @onclick="@(() => Table.LastPage())" title="Last"><i class="fas fa-angle-double-right"></i></li>
         </ul>
+        <span>@Table.PageSize per page</span>
     </div>
+}
+
+@code {
+
+    string PageNumber {
+        get { return (Table.PageNumber + 1).ToString(); }
+        set
+        {
+            if (int.TryParse(value, out int pageNumber))
+                Table.GotoPage(pageNumber - 1);
+        }
+    }
+
 }

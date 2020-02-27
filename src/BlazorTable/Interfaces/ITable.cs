@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -49,6 +49,11 @@ namespace BlazorTable
         /// Go to Next Page
         /// </summary>
         void NextPage();
+
+        /// <summary>
+        /// Go to requested page
+        /// </summary>
+        void GotoPage(int pageNumber);
 
         /// <summary>
         /// Go to Previous Page

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -15,16 +15,16 @@ namespace BlazorTable
         public IReadOnlyDictionary<string, object> UnknownParameters { get; set; }
 
         /// <summary>
-        /// Table CSS Class (Defaults to Bootstrap 4)
+        /// Table CSS Class
         /// </summary>
         [Parameter]
-        public string TableClass { get; set; } = "table table-striped table-bordered table-hover table-sm";
+        public string TableClass { get; set; } = "";
 
         /// <summary>
-        /// Table Head Class (Defaults to Bootstrap 4)
+        /// Table Head Class
         /// </summary>
         [Parameter]
-        public string TableHeadClass { get; set; } = "thead-light text-dark";
+        public string TableHeadClass { get; set; } = "";
 
         /// <summary>
         /// Table Body Class
@@ -192,6 +192,18 @@ namespace BlazorTable
             if (PageNumber + 1 < TotalPages)
             {
                 PageNumber++;
+                Update();
+            }
+        }
+
+        /// <summary>
+        /// Go to requested page
+        /// </summary>
+        public void GotoPage(int pageNumber)
+        {
+            if (pageNumber >= 0 && pageNumber < TotalPages)
+            {
+                PageNumber = pageNumber;
                 Update();
             }
         }
