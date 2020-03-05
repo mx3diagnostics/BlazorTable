@@ -3,17 +3,22 @@
 @if (AlwaysShow || (Table.TotalPages >= 1))
 {
     <div class="table-pager">
-        <span>@Table.TotalCount total records</span>
+        <span>
+            @if (Table.HasFilterbox) {
+                <a @onclick="ToggleFilterBox" style="cursor: pointer; "><i class="fas fa-filter"></i></a>
+            }
+            @Table.TotalCount total records
+        </span>
         <ul class="pagination">
             <li class="page-item @(Table.PageNumber == 0 ? "disabled": "")" @onclick="@(() => Table.FirstPage())" title="First"><i class="fas fa-angle-double-left"></i></li>
             <li class="page-item @(Table.PageNumber == 0 ? "disabled": "")" @onclick="@(() => Table.PreviousPage())" title="Previous"><i class="fas fa-angle-left"></i></li>
 
-            <li class="page-item pages"><input @bind="PageNumber" /> of @(Table.TotalPages)</li>
+            <li class="page-item pages"><input class="pager" @bind="PageNumber" /> of @(Table.TotalPages)</li>
 
             <li class="page-item @(Table.PageNumber + 1 < Table.TotalPages ? "" : "disabled")" @onclick="@(() => Table.NextPage())" title="Next"><i class="fas fa-angle-right"></i></li>
             <li class="page-item @(Table.PageNumber + 1 != Table.TotalPages ? "" : "disabled")" @onclick="@(() => Table.LastPage())" title="Last"><i class="fas fa-angle-double-right"></i></li>
         </ul>
-        <span>@Table.PageSize per page</span>
+        <span><input class="pager" @bind="@PageSize" /> per page</span>
     </div>
 }
 
@@ -26,6 +31,26 @@
             if (int.TryParse(value, out int pageNumber))
                 Table.GotoPage(pageNumber - 1);
         }
+    }
+
+    string PageSize
+    {
+        get { return Table.PageSize.ToString();  }
+        set
+        {
+            if (int.TryParse(value, out int pageSize))
+            {
+                Table.PageSize = pageSize;
+                Table.Update();
+                if (Table.PageNumber >= Table.TotalPages)
+                    Table.GotoPage(Table.TotalPages - 1);
+            }
+        }
+    }
+
+    void ToggleFilterBox()
+    {
+        Table.ToggleFilterBox();
     }
 
 }

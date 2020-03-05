@@ -13,7 +13,7 @@ namespace BlazorTable
         /// <summary>
         /// Page Size
         /// </summary>
-        int PageSize { get; }
+        int PageSize { get; set; }
 
         /// <summary>
         /// Allow Columns to be reordered
@@ -70,6 +70,10 @@ namespace BlazorTable
         /// </summary>
         void ToggleEditMode();
 
+        void ToggleFilterBox();
+
+        bool HasFilterbox { get; }
+
         /// <summary>
         /// Table Element CSS
         /// </summary>
@@ -106,5 +110,7 @@ namespace BlazorTable
         /// </summary>
         /// <param name="template"></param>
         void SetLoadingDataTemplate(LoadingDataTemplate template);
+
+        void SetFilterboxTemplate(FilterboxTemplate template);
     }
 }

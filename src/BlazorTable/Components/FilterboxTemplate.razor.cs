@@ -1,0 +1,30 @@
+using Microsoft.AspNetCore.Components;
+
+namespace BlazorTable
+{
+    /// <summary>
+    /// Child content for empty dataset
+    /// </summary>
+    public partial class FilterboxTemplate
+    {
+        /// <summary>
+        /// Parent table
+        /// </summary>
+        [CascadingParameter(Name = "Table")]
+        public ITable Table { get; set; }
+
+        /// <summary>
+        /// Content to show
+        /// </summary>
+        [Parameter]
+        public RenderFragment Template { get; set; }
+
+        /// <summary>
+        /// When initialized, tell table of this item
+        /// </summary>
+        protected override void OnInitialized()
+        {
+            Table.SetFilterboxTemplate(this);
+        }
+    }
+}

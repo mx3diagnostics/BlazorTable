@@ -18,7 +18,7 @@ namespace BlazorTable
         /// Table CSS Class
         /// </summary>
         [Parameter]
-        public string TableClass { get; set; } = "";
+        public string TableClass { get; set; } = "table";
 
         /// <summary>
         /// Table Head Class
@@ -39,7 +39,7 @@ namespace BlazorTable
         public Expression<Func<TableItem, string>> TableRowClass { get; set; }
 
         /// <summary>
-        /// Page Size, defaults to 15
+        /// Page Size, defaults to 10
         /// </summary>
         [Parameter]
         public int PageSize { get; set; } = DEFAULT_PAGE_SIZE;
@@ -238,6 +238,18 @@ namespace BlazorTable
             StateHasChanged();
         }
 
+
+        private bool filterboxCollapsed = true;
+        private string? filterboxCollapseClass => filterboxCollapsed ? "collapse" : null;
+
+        public void ToggleFilterBox()
+        {
+            filterboxCollapsed = !filterboxCollapsed;
+            Refresh();
+        }
+
+        public bool HasFilterbox => this._filterboxTemplate != null;
+
         /// <summary>
         /// Redraws Table without Getting Data
         /// </summary>
@@ -309,12 +321,23 @@ namespace BlazorTable
         /// <summary>
         /// Set the template to use for loading data
         /// </summary>
-        /// <param name="emptyDataTemplate"></param>
-        public void SetLoadingDataTemplate(LoadingDataTemplate emptyDataTemplate)
+        /// <param name="template"></param>
+        public void SetLoadingDataTemplate(LoadingDataTemplate template)
         {
-            _loadingDataTemplate = emptyDataTemplate?.Template;
+            _loadingDataTemplate = template?.Template;
         }
 
         private RenderFragment _loadingDataTemplate;
+
+        /// <summary>
+        /// Set the template to use for loading data
+        /// </summary>
+        /// <param name="template"></param>
+        public void SetFilterboxTemplate(FilterboxTemplate template)
+        {
+            _filterboxTemplate = template?.Template;
+        }
+
+        private RenderFragment _filterboxTemplate;
     }
 }
