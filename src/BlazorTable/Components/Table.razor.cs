@@ -65,10 +65,13 @@ namespace BlazorTable
         [Parameter]
         public IEnumerable<TableItem> Items { get; set; }
 
+        [Parameter]
+        public int TotalCountUnfiltered { get; set; }
+
         [Inject]
         private ILogger<ITable<TableItem>> Logger { get; set; }
 
-        private IEnumerable<TableItem> TempItems { get; set; }
+        public IEnumerable<TableItem> TempItems { get; set; }
 
         /// <summary>
         /// List of All Available Columns
@@ -339,5 +342,43 @@ namespace BlazorTable
         }
 
         private RenderFragment _filterboxTemplate;
+
+
+
+        string CountText
+        {
+            get
+            {
+                if (TotalCount < TotalCountUnfiltered)
+                    return $"Showing {TotalCount} of {TotalCountUnfiltered} records";
+                else
+                    return $"{TotalCount} total records";
+            }
+        }
+
+        string PageNumberText
+        {
+            get { return (TotalPages >= 1 ? (PageNumber + 1) : 0).ToString(); }
+            set
+            {
+                if (int.TryParse(value, out int pageNumber))
+                    GotoPage(pageNumber - 1);
+            }
+        }
+
+        string PageSizeText
+        {
+            get { return PageSize.ToString(); }
+            set
+            {
+                if (int.TryParse(value, out int pageSize))
+                {
+                    PageSize = pageSize;
+                    Update();
+                    if (PageNumber >= TotalPages)
+                        GotoPage(TotalPages - 1);
+                }
+            }
+        }
     }
 }
