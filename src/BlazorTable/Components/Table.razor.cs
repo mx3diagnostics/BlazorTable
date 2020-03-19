@@ -320,7 +320,7 @@ namespace BlazorTable
         }
 
         private RenderFragment _emptyDataTemplate;
-        
+
         /// <summary>
         /// Set the template to use for loading data
         /// </summary>
@@ -342,6 +342,8 @@ namespace BlazorTable
         }
 
         private RenderFragment _filterboxTemplate;
+
+        [Parameter] public bool FilterActive { get; set; } = false;
 
 
 
@@ -380,5 +382,7 @@ namespace BlazorTable
                 }
             }
         }
+
+        string? filterButtonClass => FilterActive ? "filterbtn active" : "filterbtn";
     }
 }
