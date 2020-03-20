@@ -250,6 +250,16 @@ namespace BlazorTable
             filterboxCollapsed = !filterboxCollapsed;
             Refresh();
         }
+        public void ShowFilterBox()
+        {
+            filterboxCollapsed = false;
+            Refresh();
+        }
+        public void HideFilterBox()
+        {
+            filterboxCollapsed = true;
+            Refresh();
+        }
 
         public bool HasFilterbox => this._filterboxTemplate != null;
 
