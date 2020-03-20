@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components;
 using System;
 using System.Globalization;
 using System.Linq.Expressions;
@@ -165,7 +165,8 @@ namespace BlazorTable
                 throw new InvalidOperationException("A Column has both Title and Property parameters null");
             }
 
-            Type = Field?.GetPropertyMemberInfo().GetMemberUnderlyingType();
+            if (Filterable)
+                Type = Field?.GetPropertyMemberInfo().GetMemberUnderlyingType();
         }
 
         /// <summary>
