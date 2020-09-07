@@ -128,11 +128,11 @@ namespace BlazorTable
                 {
                     if (sortColumn.SortDescending)
                     {
-                        ItemsQueryable = ItemsQueryable.OrderByDescending(sortColumn.Field);
+                        ItemsQueryable = ItemsQueryable.OrderByNaturalDescending(sortColumn.Field);
                     }
                     else
                     {
-                        ItemsQueryable = ItemsQueryable.OrderBy(sortColumn.Field);
+                        ItemsQueryable = ItemsQueryable.OrderByNatural(sortColumn.Field);
                     }
                 }
 
