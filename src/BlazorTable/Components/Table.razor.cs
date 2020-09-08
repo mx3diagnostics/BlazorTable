@@ -152,6 +152,8 @@ namespace BlazorTable
         public void Update()
         {
             TempItems = GetData();
+            if (PageNumber > TotalPages - 1)
+                GotoPage(TotalPages - 1);
             Refresh();
         }
 
