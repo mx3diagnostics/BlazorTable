@@ -16,6 +16,9 @@ namespace BlazorTable
             var obj_comp = Comparer<object>.Default;
             var string_cmp = StringComparer.CurrentCultureIgnoreCase;
 
+            if (x == null) return -1;
+            if (y == null) return 1;
+
             using (var leftIt = x.GetEnumerator())
             using (var rightIt = y.GetEnumerator())
             {
@@ -43,33 +46,34 @@ namespace BlazorTable
 
     static class NaturalSortExtensionMethods
     {
-        private static Func<string, object> convert = str => int.TryParse(str, out int i) ? (object)i : (object)str;
+        private static Func<string, object> convert = s => s == null ? null : (int.TryParse(s, out int i) ? (object)i : (object)s);
+        private static Func<string, IEnumerable<object>> split = s => s == null ? null : Regex.Split(s.Replace(" ", "", StringComparison.CurrentCultureIgnoreCase), "([0-9]+)").Select(convert);
 
         public static IOrderedEnumerable<T> OrderByNatural<T>(this IEnumerable<T> xs, Func<T, string> selector)
         {
             return xs.OrderBy(
-                o => Regex.Split(selector(o).Replace(" ", ""), "([0-9]+)").Select(convert),
+                o => split(selector(o)),
                 EnumerableComparerCaseInsensitive.Default);
         }
 
         public static IOrderedEnumerable<string> OrderByNatural(this IEnumerable<string> xs)
         {
             return xs.OrderBy(
-                str => Regex.Split(str.Replace(" ", ""), "([0-9]+)").Select(convert),
+                s => split(s),
                 EnumerableComparerCaseInsensitive.Default);
         }
 
         public static IOrderedEnumerable<T> OrderByNaturalDescending<T>(this IEnumerable<T> xs, Func<T, string> selector)
         {
             return xs.OrderByDescending(
-                o => Regex.Split(selector(o).Replace(" ", ""), "([0-9]+)").Select(convert),
+                o => split(selector(o)),
                 EnumerableComparerCaseInsensitive.Default);
         }
 
         public static IOrderedEnumerable<string> OrderByNaturalDescending(this IEnumerable<string> xs)
         {
             return xs.OrderByDescending(
-                str => Regex.Split(str.Replace(" ", ""), "([0-9]+)").Select(convert),
+                s => split(s),
                 EnumerableComparerCaseInsensitive.Default);
         }
 
@@ -77,7 +81,7 @@ namespace BlazorTable
         {
             var func = selector.Compile();
             return xs.OrderBy(
-                o => Regex.Split(func(o).ToString().Replace(" ", ""), "([0-9]+)").Select(convert),
+                o => split(func(o).ToStringOrNull()),
                 EnumerableComparerCaseInsensitive.Default);
         }
 
@@ -85,8 +89,14 @@ namespace BlazorTable
         {
             var func = selector.Compile();
             return xs.OrderByDescending(
-                o => Regex.Split(func(o).ToString().Replace(" ", ""), "([0-9]+)").Select(convert),
+                o => split(func(o).ToStringOrNull()),
                 EnumerableComparerCaseInsensitive.Default);
+        }
+
+        private static string? ToStringOrNull(this object? o)
+        {
+            if (o == null) return null;
+            return o.ToString();
         }
     }
 }
