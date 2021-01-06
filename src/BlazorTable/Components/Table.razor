@@ -2,32 +2,32 @@
 @typeparam TableItem
 
 
-    <CascadingValue Value="(ITable<TableItem>)this" Name="Table">
-        @if (TempItems != null)
-        {
-            <div class="table-pager">
-                <span>
-                    @if (HasFilterbox)
-                    {
-                        <a @onclick="ToggleFilterBox" style="cursor: pointer; " class="@filterButtonClass"><i class="fas fa-filter"></i> Filters</a>
-                    }
-                    @CountText
-                </span>
-                <ul class="pagination">
-                    <li class="page-item @(PageNumber == 0 ? "disabled": "")" @onclick="@(() => FirstPage())" title="First"><i class="fas fa-angle-double-left"></i></li>
-                    <li class="page-item @(PageNumber == 0 ? "disabled": "")" @onclick="@(() => PreviousPage())" title="Previous"><i class="fas fa-angle-left"></i></li>
+<CascadingValue Value="(ITable<TableItem>)this" Name="Table">
+    @if (TempItems != null)
+    {
+        <div class="table-pager">
+            <span>
+                @if (HasFilterbox)
+                {
+                    <a @onclick="ToggleFilterBox" style="cursor: pointer; " class="@filterButtonClass"><i class="fas fa-filter"></i> Filters</a>
+                }
+                <span style="margin-left: 6px;">@CountText</span>
+            </span>
+            <ul class="pagination">
+                <li class="page-item @(PageNumber == 0 ? "disabled": "")" @onclick="@(() => FirstPage())" title="First"><i class="fas fa-angle-double-left"></i></li>
+                <li class="page-item @(PageNumber == 0 ? "disabled": "")" @onclick="@(() => PreviousPage())" title="Previous"><i class="fas fa-angle-left"></i></li>
 
-                    <li class="page-item pages"><input class="pager" @bind="PageNumberText" /> of @(TotalPages)</li>
+                <li class="page-item pages"><input class="pager" @bind="PageNumberText" /> of @(TotalPages)</li>
 
-                    <li class="page-item @(PageNumber + 1 < TotalPages ? "" : "disabled")" @onclick="@(() => NextPage())" title="Next"><i class="fas fa-angle-right"></i></li>
-                    <li class="page-item @(PageNumber + 1 != TotalPages ? "" : "disabled")" @onclick="@(() => LastPage())" title="Last"><i class="fas fa-angle-double-right"></i></li>
-                </ul>
-                <span><input class="pager" @bind="@PageSizeText" /> per page</span>
-            </div>
+                <li class="page-item @(PageNumber + 1 < TotalPages ? "" : "disabled")" @onclick="@(() => NextPage())" title="Next"><i class="fas fa-angle-right"></i></li>
+                <li class="page-item @(PageNumber + 1 != TotalPages ? "" : "disabled")" @onclick="@(() => LastPage())" title="Last"><i class="fas fa-angle-double-right"></i></li>
+            </ul>
+            <span><input class="pager" @bind="@PageSizeText" /> per page</span>
+        </div>
 
-        }
-        @ChildContent
-    </CascadingValue>
+    }
+    @ChildContent
+</CascadingValue>
 <div class="popfilterbox @filterboxCollapseClass">
     @_filterboxTemplate
 </div>
