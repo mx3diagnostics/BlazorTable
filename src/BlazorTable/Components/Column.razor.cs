@@ -109,6 +109,12 @@ namespace BlazorTable
         public bool? DefaultSortDescending { get; set; }
 
         /// <summary>
+        /// Use built-in comparer instead of string-based natural sorting
+        /// </summary>
+        [Parameter]
+        public bool DisableNaturalSort { get; set; }
+
+        /// <summary>
         /// True if this is the current Sort Column
         /// </summary>
         public bool SortColumn { get; set; }

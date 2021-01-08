@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components;
 using System;
 using System.Linq.Expressions;
 
@@ -126,6 +126,11 @@ namespace BlazorTable
         /// Direction of default sorting
         /// </summary>
         bool? DefaultSortDescending { get; set; }
+
+        /// <summary>
+        /// Use built-in comparer instead of string-based natural sorting
+        /// </summary>
+        bool DisableNaturalSort { get; set; }
 
         /// <summary>
         /// Default render if no Template specified
